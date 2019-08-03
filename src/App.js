@@ -8,7 +8,8 @@ class App extends Component {
       { name: 'Ann', age: 35 },
       { name: 'Vlad', age: 7 },
       { name: 'Stas', age: 2 }
-    ]
+    ],
+    showPerson: false
   };
 
   switchNameHandler = newName => {
@@ -31,27 +32,23 @@ class App extends Component {
     });
   };
 
+  showPersonHandle = () => {
+    this.setState({ showPerson: !this.state.showPerson });
+  };
+
   render() {
     return (
       <div className="App">
         <h1>Hi, I'm a React App</h1>
         <div>
-          <Person
-            name={this.state.persons[0].name}
-            age={this.state.persons[0].age}
-            changed={this.nameChangedHandler}
-            click={() => this.switchNameHandler('Sexy')}
-          />
-          <Person
-            name={this.state.persons[1].name}
-            age={this.state.persons[1].age}
-          >
-            My Hobbies: Racing
-          </Person>
-          <Person
-            name={this.state.persons[2].name}
-            age={this.state.persons[2].age}
-          />
+          <button onClick={this.showPersonHandle}>Show Person</button>
+          {this.state.showPerson && (
+            <div>
+              {this.state.persons.map(person => (
+                <Person name={person.name} age={person.age} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
