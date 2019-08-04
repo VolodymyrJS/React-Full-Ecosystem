@@ -5,35 +5,34 @@ import Person from './Person/Person';
 class App extends Component {
   state = {
     persons: [
-      { name: 'Ann', age: 35 },
-      { name: 'Vlad', age: 7 },
-      { name: 'Stas', age: 2 }
+      { id: 1, name: 'Ann', age: 35 },
+      { id: 2, name: 'Vlad', age: 7 },
+      { id: 3, name: 'Stas', age: 2 }
     ],
     showPerson: false
   };
 
-  switchNameHandler = newName => {
-    this.setState({
-      persons: [
-        { name: newName, age: 35 },
-        { name: 'Vlad', age: 7 },
-        { name: 'Stas', age: 2 }
-      ]
-    });
-  };
-
-  nameChangedHandler = event => {
-    this.setState({
-      persons: [
-        { name: event.target.value, age: 35 },
-        { name: 'Vlad', age: 7 },
-        { name: 'Stas', age: 2 }
-      ]
-    });
+  nameChangeHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(
+      person => person.id === id
+    );
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+    person.name = event.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+    this.setState({ persons: persons });
   };
 
   showPersonHandle = () => {
     this.setState({ showPerson: !this.state.showPerson });
+  };
+
+  deletePersonHandler = personIndex => {
+    this.setState({
+      persons: this.state.persons.filter((p, index) => personIndex !== index)
+    });
   };
 
   render() {
@@ -44,8 +43,14 @@ class App extends Component {
           <button onClick={this.showPersonHandle}>Show Person</button>
           {this.state.showPerson && (
             <div>
-              {this.state.persons.map(person => (
-                <Person name={person.name} age={person.age} />
+              {this.state.persons.map((person, index) => (
+                <Person
+                  name={person.name}
+                  age={person.age}
+                  key={person.id}
+                  click={() => this.deletePersonHandler(index)}
+                  changed={event => this.nameChangeHandler(event, person.id)}
+                />
               ))}
             </div>
           )}
